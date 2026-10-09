@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Requirements Specification — University Lost and Found System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+  :root { --primary: #1E40AF; --ink: #0F172A; --muted: #64748B; --line: #E2E8F0; --soft: #F1F5F9; }
+  * { box-sizing: border-box; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.5; margin: 0; }
+  h1, h2, h3 { line-height: 1.25; }
+  h2 { font-size: 16pt; color: var(--primary); margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--primary); break-after: avoid; }
+  h3 { font-size: 12pt; margin: 18px 0 8px; break-after: avoid; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 8px; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  section { margin-bottom: 26px; }
+  section.page { break-before: page; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.5pt; }
+  th { background: var(--primary); color: #fff; text-align: left; font-weight: 600; padding: 6px 8px; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #F8FAFC; }
+  tr { break-inside: avoid; }
+  table { break-inside: avoid; }
+  td.id { font-weight: 600; white-space: nowrap; color: var(--primary); width: 52px; }
+  td.p { text-align: center; width: 38px; font-weight: 600; }
+  .note { background: #EFF6FF; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 4px; margin: 10px 0; }
+  .flow { display: flex; gap: 6px; align-items: center; margin: 12px 0; flex-wrap: wrap; }
+  .flow span { background: var(--primary); color: #fff; padding: 7px 12px; border-radius: 6px; font-weight: 600; font-size: 10pt; }
+  .flow b { color: var(--muted); }
+  pre { background: var(--soft); padding: 12px; border-radius: 6px; font-size: 9pt; line-height: 1.4; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; border: 1px solid #CBD5E1; }
+  figure { margin: 10px 0 16px; break-inside: avoid; text-align: center; }
+  figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+  figure.mobile img { max-height: 135mm; }
+  figcaption { font-size: 9pt; color: var(--muted); margin-top: 6px; }
+  .pair { display: flex; gap: 14px; justify-content: center; }
+
+  /* Cover */
+  .cover { height: 257mm; display: flex; flex-direction: column; break-after: page; }
+  .cover .band { background: linear-gradient(150deg, #1E40AF, #1E3A8A); color: #fff; border-radius: 10px; padding: 48px 40px; margin-top: 30mm; }
+  .cover .kicker { text-transform: uppercase; letter-spacing: .12em; font-size: 10pt; opacity: .8; }
+  .cover h1 { font-size: 30pt; margin: 12px 0 10px; }
+  .cover .sub { font-size: 13pt; opacity: .9; }
+  .cover table { margin-top: auto; font-size: 10pt; }
+  .cover td { border-bottom: 1px solid var(--line); background: #fff !important; }
+  .cover td:first-child { color: var(--muted); width: 40%; }
+
+  /* TOC */
+  .toc ol { list-style: none; padding: 0; columns: 2; column-gap: 30px; }
+  .toc li { padding: 5px 0; border-bottom: 1px dotted #CBD5E1; break-inside: avoid; }
+  .toc li span { color: var(--primary); font-weight: 700; display: inline-block; width: 26px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="band">
+    <div class="kicker">Requirements Specification</div>
+    <h1>University Lost and Found System</h1>
+    <div class="sub">A centralized platform to report, match, verify and return lost and found items on campus</div>
+  </div>
+  <table>
+    <tr><td>Project</td><td><b>University Lost and Found System</b> (proposed product name: Retrouv'UNI)</td></tr>
+    <tr><td>Context</td><td>University environment (students, staff, lost and found office)</td></tr>
+    <tr><td>Document</td><td>Software Requirements Specification</td></tr>
+    <tr><td>Version</td><td>1.0</td></tr>
+    <tr><td>Date</td><td>October 2026</td></tr>
+    <tr><td>Status</td><td>Draft for review</td></tr>
+  </table>
+</div>
+
+<section class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><span>1</span>Background and Problem Statement</li>
+    <li><span>2</span>Project Objectives</li>
+    <li><span>3</span>Scope and Main Workflow</li>
+    <li><span>4</span>Actors and Roles</li>
+    <li><span>5</span>Functional Requirements</li>
+    <li><span>6</span>Business Rules</li>
+    <li><span>7</span>Main Use Cases</li>
+    <li><span>8</span>Conceptual Data Model</li>
+    <li><span>9</span>Non-Functional Requirements</li>
+    <li><span>10</span>Proposed Technical Architecture</li>
+    <li><span>11</span>Visual Identity (Design System)</li>
+    <li><span>12</span>User Interface Design</li>
+    <li><span>13</span>Provisional Schedule</li>
+    <li><span>14</span>Acceptance Criteria</li>
+    <li><span>15</span>Expected Benefits</li>
+    <li><span>16</span>Feasibility</li>
+  </ol>
+</section>
+
+<section>
+  <h2>1. Background and Problem Statement</h2>
+  <p>Since the start of our third year, some of us have lost belongings, or seen others lose them, in classrooms and other campus spaces. A loss is often noticed only later, so nobody knows what happened or whether someone found the item.</p>
+  <p>Students and staff may lose personal belongings such as phones, bags, keys, student ID cards, documents, books and USB drives. Found items may remain unreported, or be difficult to connect with their owners, because there is <b>no centralized and organized system</b>. The same problem likely exists in other universities and schools.</p>
+</section>
+
+<section>
+  <h2>2. Project Objectives</h2>
+  <h3>2.1 General objective</h3>
+  <p>Provide a centralized platform where users can report lost or found items, search reports, identify possible matches, verify ownership and record the return of recovered items.</p>
+  <h3>2.2 Specific objectives</h3>
+  <p>Users must be able to:</p>
+  <ol>
+    <li>Report an item as <b>lost</b>;</li>
+    <li>Report an item as <b>found</b>;</li>
+    <li><b>Search</b> reported items;</li>
+    <li>Receive <b>possible matches</b> between lost and found reports;</li>
+    <li>Provide the information needed to <b>verify ownership</b>;</li>
+    <li><b>Follow the status</b> of their report;</li>
+    <li>Have the <b>final return recorded</b>.</li>
+  </ol>
+  <h3>2.3 Out of scope</h3>
+  <ul>
+    <li>The system <b>does not promise to recover stolen items</b> and does not replace a report to the authorities.</li>
+    <li>No payments, no delivery of items, no real-time geolocation.</li>
+    <li>No native mobile application in version 1 (responsive web application only).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. Scope and Main Workflow</h2>
+  <p>The scope is deliberately limited to a single business workflow:</p>
+  <div class="flow"><span>Report</span><b>→</b><span>Search / Match</span><b>→</b><span>Verify</span><b>→</b><span>Return</span><b>→</b><span>Record</span></div>
+  <p>We address the information-management problem: how a university can organize lost and found information and facilitate recovery.</p>
+</section>
+
+<section>
+  <h2>4. Actors and Roles</h2>
+  <table>
+    <tr><th style="width:22%">Actor</th><th style="width:33%">Description</th><th>Main permissions</th></tr>
+    <tr><td><b>Student</b></td><td>Authenticated member of the university</td><td>Report lost/found items, search, view matches, claim items, track own reports</td></tr>
+    <tr><td><b>University staff</b></td><td>Lecturers, administrative staff, cleaning and security staff</td><td>Same as students; can drop found items at the desk</td></tr>
+    <tr><td><b>Lost and found officer</b></td><td>Staff member responsible for the lost and found office</td><td>Validate reports, manage physical inventory, verify ownership, record returns, view statistics</td></tr>
+    <tr><td><b>System administrator</b></td><td>IT team</td><td>Manage accounts and roles, categories, locations, settings; view audit logs</td></tr>
+    <tr><td><i>Visitor (not logged in)</i></td><td>Anyone</td><td>View the home page and the public list (limited information)</td></tr>
+  </table>
+</section>
+
+<section class="page">
+  <h2>5. Functional Requirements</h2>
+  <p>Priorities: <b>M</b> = Must (required for v1), <b>S</b> = Should (desirable), <b>C</b> = Could (optional).</p>
+
+  <h3>5.1 Authentication and accounts</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-01</td><td>Log in with university e-mail (or student ID number) and password</td><td class="p">M</td></tr>
+    <tr><td class="id">F-02</td><td>Registration restricted to university domain addresses, with e-mail confirmation</td><td class="p">M</td></tr>
+    <tr><td class="id">F-03</td><td>Password reset</td><td class="p">M</td></tr>
+    <tr><td class="id">F-04</td><td>Profile management (name, optional phone, faculty/department, notification preferences)</td><td class="p">S</td></tr>
+    <tr><td class="id">F-05</td><td>Single sign-on (university SSO / LDAP)</td><td class="p">C</td></tr>
+  </table>
+
+  <h3>5.2 Reporting a lost item</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-10</td><td>Form: category, title, description, colour, brand, estimated date and time range, location (building / room), optional photo</td><td class="p">M</td></tr>
+    <tr><td class="id">F-11</td><td><b>Private</b> verification fields (distinctive mark, contents, serial number, wallpaper…) visible only to the lost and found officer</td><td class="p">M</td></tr>
+    <tr><td class="id">F-12</td><td>Edit or cancel the report as long as it is not closed</td><td class="p">M</td></tr>
+    <tr><td class="id">F-13</td><td>Mark as "found it myself" to close the report</td><td class="p">S</td></tr>
+  </table>
+
+  <h3>5.3 Reporting a found item</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-20</td><td>Form: category, <b>deliberately partial</b> public description, place and date found, photo (blurring sensitive data recommended)</td><td class="p">M</td></tr>
+    <tr><td class="id">F-21</td><td>State where the item is: "I am keeping it" or "dropped at desk X"</td><td class="p">M</td></tr>
+    <tr><td class="id">F-22</td><td>The officer confirms physical receipt and assigns an <b>inventory code</b> (e.g. <code>LF-2026-0142</code>)</td><td class="p">M</td></tr>
+    <tr><td class="id">F-23</td><td>Identity documents (student ID, national ID card) are flagged as high priority to the officer</td><td class="p">S</td></tr>
+  </table>
+
+  <h3>5.4 Search and browsing</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-30</td><td>Full-text search with filters: type (lost/found), category, location, period, status</td><td class="p">M</td></tr>
+    <tr><td class="id">F-31</td><td>Paginated list of cards showing photo, category, location, date and status</td><td class="p">M</td></tr>
+    <tr><td class="id">F-32</td><td>Detailed report page (without private fields)</td><td class="p">M</td></tr>
+    <tr><td class="id">F-33</td><td>Sort by date or relevance</td><td class="p">S</td></tr>
+  </table>
+
+  <h3>5.5 Matching</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-40</td><td>For each new report, the system computes a <b>match score</b> against reports of the opposite type</td><td class="p">M</td></tr>
+    <tr><td class="id">F-41</td><td>Criteria: same category (mandatory), date proximity (± 7 days), same building/location, colour, brand, shared keywords</td><td class="p">M</td></tr>
+    <tr><td class="id">F-42</td><td>Matches above a threshold (e.g. 60%) are suggested to the reporter and to the officer</td><td class="p">M</td></tr>
+    <tr><td class="id">F-43</td><td>Users can mark a match as "Not my item"</td><td class="p">S</td></tr>
+  </table>
+
+  <h3>5.6 Claims and ownership verification</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-50</td><td>The presumed owner <b>claims</b> a found item and answers verification questions</td><td class="p">M</td></tr>
+    <tr><td class="id">F-51</td><td>The officer compares the answers with the private information and <b>accepts</b> or <b>rejects</b> the claim (reason mandatory for rejection)</td><td class="p">M</td></tr>
+    <tr><td class="id">F-52</td><td>When accepted, a pick-up appointment is proposed (place, time slot)</td><td class="p">M</td></tr>
+    <tr><td class="id">F-53</td><td>Several claims on the same item are handled by the officer; only one can be accepted</td><td class="p">M</td></tr>
+  </table>
+
+  <h3>5.7 Return and record keeping</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-60</td><td>The officer records the return: date, verified identity (document presented), officer, signature/QR code</td><td class="p">M</td></tr>
+    <tr><td class="id">F-61</td><td>The linked lost and found reports move to <b>Returned</b> status and are then archived</td><td class="p">M</td></tr>
+    <tr><td class="id">F-62</td><td>Searchable history of all reports and returns</td><td class="p">M</td></tr>
+    <tr><td class="id">F-63</td><td>Items unclaimed after N days (configurable, e.g. 90): status <b>Unclaimed</b> → donation / disposal / handed to administration</td><td class="p">S</td></tr>
+  </table>
+
+  <h3>5.8 Notifications</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-70</td><td>In-app notifications (bell): new match, claim received, decision, appointment, return</td><td class="p">M</td></tr>
+    <tr><td class="id">F-71</td><td>E-mail notifications</td><td class="p">S</td></tr>
+    <tr><td class="id">F-72</td><td>SMS / WhatsApp notifications</td><td class="p">C</td></tr>
+  </table>
+
+  <h3>5.9 Administration and statistics</h3>
+  <table>
+    <tr><th>ID</th><th>Requirement</th><th>Prio</th></tr>
+    <tr><td class="id">F-80</td><td>Officer dashboard: pending reports, claims to process, items in stock, returns this month</td><td class="p">M</td></tr>
+    <tr><td class="id">F-81</td><td>Statistics: locations and periods with the most lost/found items, return rate, average time to return</td><td class="p">S</td></tr>
+    <tr><td class="id">F-82</td><td>Management of users, roles, categories, buildings/rooms and desks</td><td class="p">M</td></tr>
+    <tr><td class="id">F-83</td><td>CSV/PDF export of registers</td><td class="p">S</td></tr>
+    <tr><td class="id">F-84</td><td>Audit log of sensitive actions</td><td class="p">M</td></tr>
+  </table>
+</section>
+
+<section class="page">
+  <h2>6. Business Rules</h2>
+  <table>
+    <tr><th>ID</th><th>Rule</th></tr>
+    <tr><td class="id">BR-01</td><td>Only an authenticated user can report, claim or receive notifications.</td></tr>
+    <tr><td class="id">BR-02</td><td>A report has <b>exactly one author</b> and belongs to <b>exactly one category</b>.</td></tr>
+    <tr><td class="id">BR-03</td><td>The date an item was lost/found cannot be in the future.</td></tr>
+    <tr><td class="id">BR-04</td><td>Verification information (private fields) is <b>never</b> displayed publicly.</td></tr>
+    <tr><td class="id">BR-05</td><td>A found item can only be returned after a claim has been <b>accepted</b> by the officer.</td></tr>
+    <tr><td class="id">BR-06</td><td>A found item can have <b>only one</b> return.</td></tr>
+    <tr><td class="id">BR-07</td><td>A user cannot claim an item they reported as found themselves.</td></tr>
+    <tr><td class="id">BR-08</td><td>After 3 rejected claims within 30 days, the account is flagged for review.</td></tr>
+    <tr><td class="id">BR-09</td><td>A report with no activity for 90 days becomes <b>Expired</b> (lost) or <b>Unclaimed</b> (found).</td></tr>
+    <tr><td class="id">BR-10</td><td>Every return requires presentation of an identity document or student ID card.</td></tr>
+  </table>
+  <h3>Status life cycle</h3>
+  <p><b>Lost item:</b> Open → Match found → Under verification → Returned → Archived <span style="color:var(--muted)">(or Cancelled / Expired)</span></p>
+  <p><b>Found item:</b> Reported → In stock (received at desk) → Claimed → Under verification → Returned → Archived <span style="color:var(--muted)">(or Unclaimed)</span></p>
+</section>
+
+<section>
+  <h2>7. Main Use Cases</h2>
+  <table>
+    <tr><th>UC</th><th style="width:30%">Actor</th><th>Description</th></tr>
+    <tr><td class="id">UC-01</td><td>Student / Staff</td><td>Authenticate</td></tr>
+    <tr><td class="id">UC-02</td><td>Student / Staff</td><td>Report a lost item</td></tr>
+    <tr><td class="id">UC-03</td><td>Student / Staff</td><td>Report a found item</td></tr>
+    <tr><td class="id">UC-04</td><td>All</td><td>Search reports</td></tr>
+    <tr><td class="id">UC-05</td><td>System</td><td>Compute and suggest matches</td></tr>
+    <tr><td class="id">UC-06</td><td>Student / Staff</td><td>Claim a found item</td></tr>
+    <tr><td class="id">UC-07</td><td>Lost and found officer</td><td>Verify ownership</td></tr>
+    <tr><td class="id">UC-08</td><td>Lost and found officer</td><td>Record the return</td></tr>
+    <tr><td class="id">UC-09</td><td>Student / Staff</td><td>Track the status of own reports</td></tr>
+    <tr><td class="id">UC-10</td><td>Lost and found officer</td><td>View statistics</td></tr>
+    <tr><td class="id">UC-11</td><td>System administrator</td><td>Manage users, categories and locations</td></tr>
+  </table>
+  <h3>Main success scenario — UC-06 / UC-07 / UC-08</h3>
+  <ol>
+    <li>The student receives a notification: "Possible match at 87%".</li>
+    <li>They open the report, click "This is my item" and answer the verification questions.</li>
+    <li>The officer compares the answers with the private details and accepts the claim.</li>
+    <li>The student receives a pick-up appointment at the desk.</li>
+    <li>At the desk, the officer checks the student ID, hands over the item and records the return.</li>
+    <li>Both reports move to <b>Returned</b>; the history is kept.</li>
+  </ol>
+</section>
+
+<section class="page">
+  <h2>8. Conceptual Data Model</h2>
+  <table>
+    <tr><th style="width:22%">Entity</th><th>Main attributes</th></tr>
+    <tr><td><b>User</b></td><td>id, last_name, first_name, email, student_id, phone, role, department, active, created_at</td></tr>
+    <tr><td><b>Category</b></td><td>id, label (Phone, Bag, Keys, Card, Document, Book, USB drive, Clothing, Other), icon</td></tr>
+    <tr><td><b>Location</b></td><td>id, building, room/area, campus</td></tr>
+    <tr><td><b>Desk</b></td><td>id, name, location_id, opening_hours</td></tr>
+    <tr><td><b>Report</b></td><td>id, type (LOST/FOUND), title, description, colour, brand, event_date, location_id, category_id, author_id, status, desk_id, inventory_code, created_at</td></tr>
+    <tr><td><b>PrivateDetail</b></td><td>id, report_id, question/hint, value</td></tr>
+    <tr><td><b>Photo</b></td><td>id, report_id, url</td></tr>
+    <tr><td><b>Match</b></td><td>id, lost_report_id, found_report_id, score, status (SUGGESTED/REJECTED/CONFIRMED)</td></tr>
+    <tr><td><b>Claim</b></td><td>id, found_report_id, claimant_id, answers, status (PENDING/ACCEPTED/REJECTED), reason, processed_by, date</td></tr>
+    <tr><td><b>Return</b></td><td>id, claim_id, officer_id, document_presented, date, signature</td></tr>
+    <tr><td><b>Notification</b></td><td>id, user_id, type, message, read, date</td></tr>
+    <tr><td><b>AuditLog</b></td><td>id, user_id, action, entity, entity_id, date</td></tr>
+  </table>
+  <p><b>Key relationships:</b> a User has <b>0..n</b> Reports; a Report has <b>0..n</b> Photos and PrivateDetails; a found Report has <b>0..n</b> Claims; an accepted Claim has <b>0..1</b> Return.</p>
+</section>
+
+<section>
+  <h2>9. Non-Functional Requirements</h2>
+  <table>
+    <tr><th>ID</th><th style="width:20%">Category</th><th>Requirement</th></tr>
+    <tr><td class="id">NF-01</td><td>Security</td><td>Hashed passwords (bcrypt/argon2), mandatory HTTPS, protection against CSRF, XSS and SQL injection</td></tr>
+    <tr><td class="id">NF-02</td><td>Privacy</td><td>Compliance with personal data protection principles; data minimisation; private fields encrypted</td></tr>
+    <tr><td class="id">NF-03</td><td>Access control</td><td>Role-based access control (RBAC) enforced server-side</td></tr>
+    <tr><td class="id">NF-04</td><td>Performance</td><td>Response time under 2 s for 95% of requests; search under 1 s over 10,000 reports</td></tr>
+    <tr><td class="id">NF-05</td><td>Availability</td><td>99% during academic periods; daily database backup</td></tr>
+    <tr><td class="id">NF-06</td><td>Usability</td><td>Responsive, mobile-first interface; a report can be completed in under 2 minutes</td></tr>
+    <tr><td class="id">NF-07</td><td>Accessibility</td><td>WCAG 2.1 AA contrast, keyboard navigation, labelled form fields</td></tr>
+    <tr><td class="id">NF-08</td><td>Languages</td><td>English and French</td></tr>
+    <tr><td class="id">NF-09</td><td>Maintainability</td><td>Version-controlled code (Git), layered architecture, automated tests of business rules</td></tr>
+    <tr><td class="id">NF-10</td><td>Traceability</td><td>Audit log of approvals, rejections and returns</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>10. Proposed Technical Architecture</h2>
+  <ul>
+    <li><b>Frontend:</b> responsive web application (HTML/CSS/JavaScript, or React/Vue).</li>
+    <li><b>Backend:</b> REST API (Node.js/Express, Laravel or Django, at the team's choice).</li>
+    <li><b>Database:</b> relational (MySQL or PostgreSQL).</li>
+    <li><b>Photo storage:</b> server folder or object storage, with resized images.</li>
+    <li><b>Notifications:</b> SMTP e-mail service; in-app notifications stored in the database.</li>
+    <li><b>Deployment:</b> university server or cloud hosting, with a test environment.</li>
+  </ul>
+<pre>[Browser]  ⇄  [Web frontend]  ⇄  [REST API]  ⇄  [Database]
+                                     │
+                                     ├── Matching service (scoring)
+                                     ├── Photo storage
+                                     └── E-mail / notification service</pre>
+</section>
+
+<section>
+  <h2>11. Visual Identity (Design System)</h2>
+  <table>
+    <tr><th style="width:28%">Element</th><th>Choice</th></tr>
+    <tr><td>Primary colour</td><td><span class="swatch" style="background:#1E40AF"></span>Academic blue <code>#1E40AF</code></td></tr>
+    <tr><td>Secondary colour</td><td><span class="swatch" style="background:#F59E0B"></span>Amber <code>#F59E0B</code> ("found" actions, highlights)</td></tr>
+    <tr><td>Success</td><td><span class="swatch" style="background:#16A34A"></span><code>#16A34A</code> (Returned)</td></tr>
+    <tr><td>Alert</td><td><span class="swatch" style="background:#DC2626"></span><code>#DC2626</code> (Lost, rejection)</td></tr>
+    <tr><td>Neutrals</td><td><span class="swatch" style="background:#0F172A"></span><code>#0F172A</code> text · <span class="swatch" style="background:#64748B"></span><code>#64748B</code> secondary text · <span class="swatch" style="background:#E2E8F0"></span><code>#E2E8F0</code> borders · <span class="swatch" style="background:#F8FAFC"></span><code>#F8FAFC</code> background</td></tr>
+    <tr><td>Typography</td><td><b>Inter</b> — headings 600/700, body 400; sizes 12 / 14 / 16 / 20 / 28 / 36 px</td></tr>
+    <tr><td>Corner radius</td><td>8 px (inputs, buttons), 12 px (cards)</td></tr>
+    <tr><td>Spacing</td><td>4 px grid (4, 8, 12, 16, 24, 32, 48)</td></tr>
+    <tr><td>Icons</td><td>Font Awesome</td></tr>
+    <tr><td>Status badges</td><td>Lost (red), Found (amber), Under verification (violet), Returned (green), Archived (grey)</td></tr>
+  </table>
+</section>
+
+<section class="page">
+  <h2>12. User Interface Design</h2>
+  <p>High-fidelity mockups are provided in <code>maquettes/index.html</code> and can be imported into Figma as editable layers. Each screen is a 1280 px (desktop) or 390 px (mobile) frame.</p>
+  <table>
+    <tr><th>#</th><th style="width:28%">Screen</th><th style="width:16%">Actor</th><th>Content</th></tr>
+    <tr><td class="id">S1</td><td>Login</td><td>All</td><td>Logo, university e-mail, password, sign-up link</td></tr>
+    <tr><td class="id">S2</td><td>Home / Dashboard</td><td>Student</td><td>"I lost" / "I found" buttons, search bar, matches, my reports</td></tr>
+    <tr><td class="id">S3</td><td>Report a lost item</td><td>Student</td><td>Step-by-step form, category tiles, location, date, photo, private details</td></tr>
+    <tr><td class="id">S4</td><td>Search</td><td>All</td><td>Side filters, card grid, status badges</td></tr>
+    <tr><td class="id">S5</td><td>Report details + matches</td><td>Student</td><td>Item sheet, status timeline, scored matches, "This is my item" button</td></tr>
+    <tr><td class="id">S6</td><td>Ownership verification</td><td>Officer</td><td>Side-by-side comparison of claimant answers vs private details, accept / reject</td></tr>
+    <tr><td class="id">S7</td><td>Officer dashboard</td><td>Officer</td><td>KPIs, chart by location, task queue, return recording</td></tr>
+    <tr><td class="id">S8</td><td>Mobile version</td><td>Student</td><td>Home and reporting on a 390 px screen</td></tr>
+  </table>
+  <h3>Importing the mockups into Figma</h3>
+  <ol>
+    <li>In Figma, install the <b>html.to.design</b> plugin (Plugins → search "html.to.design").</li>
+    <li>Import <code>maquettes/index.html</code> (hosted, e.g. via GitHub Pages, or pasted into the plugin's HTML import).</li>
+    <li>Each screen becomes a Figma frame with editable text, shape and auto-layout layers.</li>
+    <li>Create the colour and text styles from section 11, then convert buttons, inputs and badges into <b>components</b>.</li>
+  </ol>
+  <p style="color:var(--muted);font-size:9pt">Mockup labels are currently in French; they will be localised to English (requirement NF-08).</p>
+
+  <figure><img src="../maquettes/apercus/E1-connexion.png" /><figcaption>S1 — Login</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E2-accueil.png" /><figcaption>S2 — Student home / dashboard</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E3-declarer-perdu.png" /><figcaption>S3 — Report a lost item (step 1 of 3)</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E4-recherche.png" /><figcaption>S4 — Search</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E5-detail-correspondances.png" /><figcaption>S5 — Report details and possible matches</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E6-verification.png" /><figcaption>S6 — Ownership verification (officer)</figcaption></figure>
+  <figure><img src="../maquettes/apercus/E7-dashboard-responsable.png" /><figcaption>S7 — Officer dashboard</figcaption></figure>
+  <figure class="mobile"><div class="pair"><img src="../maquettes/apercus/E8a-mobile-accueil.png" /><img src="../maquettes/apercus/E8b-mobile-declaration.png" /></div><figcaption>S8 — Mobile: home and found-item report</figcaption></figure>
+</section>
+
+<section class="page">
+  <h2>13. Provisional Schedule</h2>
+  <table>
+    <tr><th style="width:20%">Phase</th><th>Deliverables</th><th style="width:16%">Duration</th></tr>
+    <tr><td><b>1. Analysis</b></td><td>Requirements specification, feasibility study, business rules</td><td>2 weeks</td></tr>
+    <tr><td><b>2. Design</b></td><td>Use cases, conceptual/logical data model, architecture, Figma mockups</td><td>3 weeks</td></tr>
+    <tr><td><b>3. Development</b></td><td>Authentication, reports, search, matching, verification, return, administration</td><td>6 weeks</td></tr>
+    <tr><td><b>4. Testing</b></td><td>Unit, integration and user acceptance tests</td><td>2 weeks</td></tr>
+    <tr><td><b>5. Deployment</b></td><td>Go-live, user guide, final presentation</td><td>1 week</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>14. Acceptance Criteria</h2>
+  <ul>
+    <li>A student can report a lost item in under 2 minutes from a phone.</li>
+    <li>A matching found report triggers a match notification to the owner.</li>
+    <li>No private field is visible to anyone other than the lost and found officer.</li>
+    <li>A return is only possible after an accepted claim and the recording of an identity document.</li>
+    <li>The officer can see the number of lost items per location and per month.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>15. Expected Benefits</h2>
+  <ul>
+    <li>Centralizes lost and found information.</li>
+    <li>Makes it easier to search for missing belongings.</li>
+    <li>Helps connect lost items with reported found items.</li>
+    <li>Provides an organized ownership verification process.</li>
+    <li>Keeps a history of reports and returned items.</li>
+    <li>A structured process helps items reach their legitimate owners.</li>
+    <li>The university can see which locations or periods have the most lost or found items.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>16. Feasibility</h2>
+  <p>The scope is defined around one workflow: <b>Report → Search/Match → Verify → Return → Record</b>. We do not promise to recover stolen items; we address the information-management problem of how a university can organize lost and found information and facilitate recovery.</p>
+  <p>This scope provides enough material for requirements analysis, a feasibility study, business rules, use cases, database design, system architecture, interface design, testing and deployment planning, using web technologies the team already masters.</p>
+</section>
+
+</body>
+</html>
