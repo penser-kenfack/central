@@ -1,0 +1,23 @@
+# Bolo – one command installation: docker compose up -d --build
+# TLS is terminated by the host's reverse proxy (Nginx + Let's Encrypt) in front of port 8080.
+services:
+  db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_USER: bolo, POSTGRES_PASSWORD: "${DB_PASSWORD}", POSTGRES_DB: bolo }
+    volumes: [db:/var/lib/postgresql/data]
+    restart: unless-stopped
+  clamav:
+    image: clamav/clamav:1.4
+    restart: unless-stopped
+  api:
+    build: ./server
+    env_file: ./server/.env
+    volumes: [cv:/data/cv]
+    depends_on: [db, clamav]
+    restart: unless-stopped
+  web:
+    build: ./client
+    ports: ["8080:80"]
+    depends_on: [api]
+    restart: unless-stopped
+volumes: { db: {}, cv: {} }
