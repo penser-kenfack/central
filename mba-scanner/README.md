@@ -1,5 +1,20 @@
 # Web Application Vulnerability Scanner — Deep Scan Upgrade
 
+> Internship project of **MBA SIMON ASI** (IWOMI Technologies, 2026).
+
+## Version 2.1 (end of internship)
+
+- Scan status, counters and score are stored in SQLite: results survive a server restart.
+- Fixed: the History page crashed (`url_for('scan')` → `scan_progress`).
+- Fixed: `ftp://` and other non-HTTP schemes were accepted by the target validator.
+- Security score (100 − penalties) and grade A–F; findings grouped by OWASP Top 10 (2021) category.
+- New page **URL risk check** (phishing heuristics on the text of a link, no request sent).
+- The URL heuristic no longer labels a site as “REAL WEBSITE” (it says “LOW RISK”).
+- New interface and PDF report; fonts served locally.
+- `lab/lab_site.py`: local laboratory site (weak and hardened variants) used as authorized target.
+- `tests/`: 21 automated tests (`python -m pytest -q tests`).
+
+
 This version upgrades the original Flask scanner instead of replacing the project concept.
 
 ## What was improved

@@ -1,1 +1,30 @@
-{% extends "base.html" %}{% block content %}<section class="hero"><h1>Web Application Vulnerability Scanner</h1><p>Deep authorized security assessment dashboard.</p><form method="post"><input name="target" type="url" placeholder="https://example.com" required><div class="authorization"><label><input type="checkbox" name="authorized" value="yes" required>I confirm that I own this website or have explicit permission to perform security testing against it.</label></div><button type="submit">Start Deep Scan</button></form><div class="scan-scope"><b>Deep scan includes:</b> page discovery, forms, security headers, browser policies, cookies, TLS, redirects, URL-risk analysis, OWASP ZAP, Nikto and Nmap.</div><p class="note">Only scan websites that you own or have explicit permission to test. OWASP ZAP active scanning sends attack requests and must only be used with permission.</p></section>{% endblock %}
+{% extends "base.html" %}{% block content %}
+<div class="head"><div><h1>New security scan</h1><p>Passive analysis of an authorized web application, with optional OWASP ZAP, Nikto and Nmap stages.</p></div></div>
+<div class="grid-scan">
+  <div class="card scan-form">
+    <form method="post">
+      <label class="l" for="target">Target URL</label>
+      <div class="url-in"><span>URL</span><input id="target" name="target" type="text" placeholder="https://example.com" required autofocus></div>
+      <label class="auth"><input type="checkbox" name="authorized" value="yes" required><span><b>Authorization.</b> I confirm that I own this website or that I have explicit, written permission to perform security testing against it.</span></label>
+      <button class="btn primary" type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Start scan</button>
+    </form>
+  </div>
+  <div class="card">
+    <div class="h"><h3>What the scan does</h3></div>
+    <div class="b"><ul class="pipeline">
+      <li><span class="n">1</span><span class="t">Target validation<small>HTTP/HTTPS URL, valid host name</small></span><span class="tag pass">built in</span></li>
+      <li><span class="n">2</span><span class="t">Crawling &amp; discovery<small>same-host pages, URLs and forms (40 pages max.)</small></span><span class="tag pass">built in</span></li>
+      <li><span class="n">3</span><span class="t">Security headers &amp; cookies<small>CSP, X-Frame-Options, nosniff, Referrer/Permissions-Policy, HSTS, Secure, HttpOnly</small></span><span class="tag pass">built in</span></li>
+      <li><span class="n">4</span><span class="t">TLS, redirects &amp; URL risk<small>protocol version, redirect chain, phishing heuristics</small></span><span class="tag pass">built in</span></li>
+      {% for name, on in tools.items() %}<li><span class="n">{{ loop.index + 4 }}</span><span class="t">{{ name }}<small>external tool, used only if configured</small></span><span class="tag {{ 'on' if on else 'off' }}">{{ 'configured' if on else 'not configured' }}</span></li>{% endfor %}
+    </ul></div>
+  </div>
+</div>
+{% if recent %}
+<div class="card" style="margin-top:18px">
+  <div class="h"><h3>Recent scans</h3><a href="{{ url_for('history') }}" style="margin-left:auto;font-size:13px">View all</a></div>
+  <table>{% for s in recent %}<tr class="row"><td style="width:60px"><span class="grade {{ s.grade or 'none' }}">{{ s.grade or '–' }}</span></td>
+    <td><a href="{{ url_for('scan_progress', scan_id=s.id) }}" class="mono">{{ s.target }}</a><div class="note">Scan #{{ s.id }} · {{ s.created_at }}</div></td>
+    <td style="text-align:right">{{ s.pages or 0 }} pages · {{ s.forms or 0 }} forms</td></tr>{% endfor %}</table>
+</div>{% endif %}
+{% endblock %}

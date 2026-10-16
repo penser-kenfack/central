@@ -1,5 +1,42 @@
-{% extends "base.html" %}{% block content %}<h1>Deep Scan Results</h1><p><b>Target:</b> {{scan.target}}</p>
-<div class="cards">{% for k in ["Critical","High","Medium","Low","Informational"] %}<div class="card">{{k}}<strong>{{summary[k]}}</strong></div>{% endfor %}</div>
-<div class="scan-meta"><b>Pages crawled:</b> {{stats.get('pages',0)}} &nbsp; <b>URLs discovered:</b> {{stats.get('urls',0)}} &nbsp; <b>Forms:</b> {{stats.get('forms',0)}} &nbsp; <b>Total findings:</b> {{stats.get('findings',findings|length)}}</div>
-<a class="button" href="{{url_for('report',scan_id=scan.id)}}">Generate PDF Report</a>
-<table><tr><th>Severity</th><th>Source</th><th>Finding</th><th>URL</th><th>Evidence / Recommendation</th></tr>{% for f in findings %}<tr><td>{{f.severity}}</td><td>{{f.source}}</td><td><b>{{f.title}}</b><br><small>{{f.description}}</small></td><td>{{f.url}}</td><td><small><b>Evidence:</b> {{f.evidence}}<br><b>Recommendation:</b> {{f.recommendation}}</small></td></tr>{% endfor %}</table>{% endblock %}
+{% extends "base.html" %}{% block content %}
+{% set score = scan.score if scan.score is not none else 0 %}
+<div class="head">
+  <div><h1>Scan results</h1><p class="mono">{{ scan.target }}</p><p class="note">Scan #{{ scan.id }} · started {{ scan.created_at }}{% if scan.finished_at %} · finished {{ scan.finished_at }}{% endif %}</p></div>
+  <div class="act"><a class="btn" href="{{ url_for('index') }}">New scan</a><a class="btn primary" href="{{ url_for('report', scan_id=scan.id) }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>PDF report</a></div>
+</div>
+{% if stats.stage == 'error' %}<div class="flash">The scan stopped: {{ stats.error }}</div>{% endif %}
+<div class="summary">
+  <div class="card score">
+    <div class="ring"><svg width="112" height="112"><circle cx="56" cy="56" r="47" fill="none" stroke="#e7ecf1" stroke-width="11"/>
+      <circle cx="56" cy="56" r="47" fill="none" stroke="{{ {'A':'#138a3e','B':'#5a9e2f','C':'#b98900','D':'#e8590c','F':'#d92d20'}.get(scan.grade, '#c5ccd4') }}" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{ (score / 100 * 295.3) | round(1) }} 295.3" transform="rotate(-90 56 56)"/></svg>
+      <b>{{ scan.grade or '–' }}</b></div>
+    <div><div style="font-size:13px;color:var(--ink2)">Security score</div><div style="font:700 30px Plex">{{ score }}<span style="font-size:15px;color:var(--ink3)">/100</span></div>
+      <div class="note">100 minus a penalty per finding:<br>High 15 · Medium 8 · Low 3</div></div>
+  </div>
+  <div class="card">
+    <div class="sevs">{% for k in ["Critical","High","Medium","Low","Informational"] %}<div class="sevc {{ k }}"><span>{{ k }}</span><strong>{{ summary[k] }}</strong></div>{% endfor %}</div>
+    <div class="meta"><span><b>{{ stats.pages or scan.pages or 0 }}</b> pages crawled</span><span><b>{{ stats.urls or scan.urls or 0 }}</b> URLs discovered</span><span><b>{{ stats.forms or scan.forms or 0 }}</b> forms</span><span><b>{{ findings | length }}</b> findings</span></div>
+  </div>
+</div>
+<div class="cols">
+  <div class="card">
+    <div class="h"><h3>Findings by OWASP Top 10 category</h3><span class="note" style="margin-left:auto">click a finding for evidence and fix</span></div>
+    {% for cat, items in groups.items() %}
+      <div class="cat">{{ cat }}<span>{{ items | length }}</span></div>
+      {% for f in items %}
+      <details class="f"><summary><span class="sev {{ f.severity }}">{{ f.severity }}</span><span><b>{{ f.title }}</b></span><span class="src">{{ f.source }}</span></summary>
+        <div class="body"><div>{{ f.description }}</div><div class="ev">{{ f.evidence }}</div><div class="fix"><b>Recommendation.</b> {{ f.recommendation }}</div><div class="note mono">{{ f.url }}</div></div></details>
+      {% endfor %}
+    {% else %}<div class="b">No findings.</div>{% endfor %}
+  </div>
+  <div style="display:grid;gap:18px">
+    <div class="card"><div class="h"><h3>Stages</h3></div><table class="mini">
+      <tr><td>Crawling &amp; discovery</td><td style="text-align:right"><span class="tag pass">done</span></td></tr>
+      <tr><td>Headers, cookies, TLS, redirects, URL risk</td><td style="text-align:right"><span class="tag pass">done</span></td></tr>
+      {% for name, on in tools.items() %}<tr><td>{{ name }}</td><td style="text-align:right"><span class="tag {{ 'on' if on else 'off' }}">{{ 'run' if on else 'skipped – not configured' }}</span></td></tr>{% endfor %}
+    </table></div>
+    <div class="card"><div class="h"><h3>Pages discovered</h3><span class="note" style="margin-left:auto">{{ pages | length }}</span></div>
+      <table class="mini">{% for p in pages[:14] %}<tr><td class="mono" style="word-break:break-all">{{ p.url.split('//', 1)[-1] }}</td><td style="text-align:right" class="mono">{{ p.status }}</td></tr>{% endfor %}</table></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,22 +1,39 @@
 {% extends "base.html" %}{% block content %}
-<section class="scan-progress">
-<h1>Deep Security Scan in Progress</h1><p><b>Target:</b> {{scan.target}}</p>
-<div class="progress-track"><div id="bar" class="progress-bar" style="width: {{job.progress}}%"></div></div>
-<div class="progress-number" id="percent">{{job.progress}}%</div>
-<h2 id="stage">{{job.message}}</h2><p class="note">The scanner is performing real analysis. Do not close this page.</p>
-<div class="live-grid"><div class="live-card"><span>Pages crawled</span><strong id="pages">0</strong></div><div class="live-card"><span>URLs discovered</span><strong id="urls">0</strong></div><div class="live-card"><span>Forms found</span><strong id="forms">0</strong></div><div class="live-card"><span>Findings</span><strong id="findings">0</strong></div></div>
-<div class="stage-list"><div>✓ Target validation</div><div>✓ Website crawling & discovery</div><div>✓ Browser security & cookies</div><div>✓ TLS & redirects</div><div>✓ OWASP ZAP deep scan</div><div>✓ Nikto & Nmap</div><div>✓ Risk correlation & report</div></div>
-</section>
+<div class="head"><div><h1>Scan in progress</h1><p class="mono">{{ scan.target }}</p></div></div>
+<div class="prog">
+  <div class="card b" style="padding:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span class="pct" id="percent">{{ job.progress }}%</span><span id="stage" style="color:var(--ink2)">{{ job.message }}</span></div>
+    <div class="bar" style="margin-top:12px"><i id="bar" style="width:{{ job.progress }}%"></i></div>
+    <div class="counters">
+      <div class="counter"><span>Pages crawled</span><strong id="pages">{{ job.pages or 0 }}</strong></div>
+      <div class="counter"><span>URLs discovered</span><strong id="urls">{{ job.urls or 0 }}</strong></div>
+      <div class="counter"><span>Forms found</span><strong id="forms">{{ job.forms or 0 }}</strong></div>
+      <div class="counter"><span>Findings</span><strong id="findings">{{ job.findings or 0 }}</strong></div>
+    </div>
+    <p class="note" style="margin-top:16px">The page follows the real stages of the backend; it can be closed and reopened from the history.</p>
+  </div>
+  <div class="card"><div class="h"><h3>Stages</h3></div><div class="b"><ul class="stages" id="stages">
+    {% for key, label in stages %}<li data-k="{{ key }}"><i></i>{{ label }}</li>{% endfor %}
+  </ul></div></div>
+</div>
 <script>
-const id={{scan.id}};
-async function poll(){
- try{const r=await fetch(`/scan/${id}/status`);const j=await r.json();
- document.getElementById('bar').style.width=(j.progress||0)+'%';document.getElementById('percent').textContent=(j.progress||0)+'%';
- document.getElementById('stage').textContent=j.message||'Working...';
- ['pages','urls','forms','findings'].forEach(k=>{if(j[k]!==undefined)document.getElementById(k).textContent=j[k]});
- if(j.stage==='complete'){window.location.href=`/scan/${id}`;return}
- if(j.stage==='error'){document.getElementById('stage').textContent='Scan error: '+j.error;return}
- }catch(e){document.getElementById('stage').textContent='Waiting for scanner status...'}
- setTimeout(poll,1000);
-} poll();
-</script>{% endblock %}
+const id = {{ scan.id }}, order = {{ stages | map(attribute=0) | list | tojson }};
+function paint(stage) {
+  const at = stage === 'complete' ? order.length : order.indexOf(stage);
+  document.querySelectorAll('#stages li').forEach((li, i) => { li.className = i < at ? 'done' : i === at ? 'now' : ''; });
+}
+async function poll() {
+  try {
+    const j = await (await fetch(`/scan/${id}/status`)).json();
+    document.getElementById('bar').style.width = (j.progress || 0) + '%';
+    document.getElementById('percent').textContent = (j.progress || 0) + '%';
+    document.getElementById('stage').textContent = j.message || 'Working…';
+    ['pages', 'urls', 'forms', 'findings'].forEach((k) => { if (j[k] !== undefined && j[k] !== null) document.getElementById(k).textContent = j[k]; });
+    paint(j.stage);
+    if (j.stage === 'complete' || j.stage === 'error') { setTimeout(() => location.reload(), 600); return; }
+  } catch (e) { document.getElementById('stage').textContent = 'Waiting for the scanner…'; }
+  setTimeout(poll, 1000);
+}
+paint({{ job.stage | tojson }}); poll();
+</script>
+{% endblock %}

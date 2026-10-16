@@ -1,1 +1,26 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Web Vulnerability Scanner</title><link rel="stylesheet" href="{{url_for('static',filename='style.css')}}"></head><body><nav><b>Web Vulnerability Scanner</b><a href="/">New Scan</a><a href="/history">History</a></nav><main>{% with m=get_flashed_messages(with_categories=true) %}{% for c,x in m %}<div class="flash">{{x}}</div>{% endfor %}{% endwith %}{% block content %}{% endblock %}</main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Web Vulnerability Scanner{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="{{ url_for('index') }}">
+    <svg width="30" height="30" viewBox="0 0 32 32"><path d="M16 2l11 4v9c0 7-4.7 12.3-11 15C9.7 27.3 5 22 5 15V6z" fill="#138a3e"/><circle cx="16" cy="15" r="6" fill="none" stroke="#fff" stroke-width="2"/><path d="M16 15l4-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="15" r="1.6" fill="#fff"/></svg>
+    <span>WVS Scanner<small>Web Application Vulnerability Scanner</small></span></a>
+  <nav>
+    <a href="{{ url_for('index') }}" class="{{ 'on' if request.endpoint == 'index' }}">New scan</a>
+    <a href="{{ url_for('url_check') }}" class="{{ 'on' if request.endpoint == 'url_check' }}">URL risk check</a>
+    <a href="{{ url_for('history') }}" class="{{ 'on' if request.endpoint in ('history', 'scan_progress') }}">History</a>
+  </nav>
+  <span class="pill"><b>●</b> Authorized testing only</span>
+</div></header>
+<main>
+{% with m = get_flashed_messages(with_categories=true) %}{% for c, x in m %}<div class="flash">{{ x }}</div>{% endfor %}{% endwith %}
+{% block content %}{% endblock %}
+</main>
+<footer>Scan only websites you own or are explicitly authorized to test. Findings are indicators to be confirmed, not proof that a site is secure or insecure.</footer>
+</body>
+</html>

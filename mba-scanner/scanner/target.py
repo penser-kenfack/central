@@ -6,15 +6,17 @@ def validate_target(target):
     """
     Validate a target URL.
 
-    Local targets are allowed.
-    Remote targets are allowed only when the user explicitly
-    confirms that they are authorized to test the website.
+    Any HTTP/HTTPS host is accepted here; the web form additionally
+    requires the user to confirm that they are authorized to test it.
     """
 
     if not target:
         return False, "Enter a target URL.", None
 
     target = target.strip()
+
+    if "://" in target and not target.lower().startswith(("http://", "https://")):
+        return False, "Only HTTP and HTTPS URLs are supported.", None
 
     if not target.startswith(("http://", "https://")):
         target = "https://" + target

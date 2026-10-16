@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block content %}
+<div class="head"><div><h1>URL risk check</h1><p>Heuristic analysis of a link before opening it: IP host, punycode, risky TLD, many subdomains, “@” in the URL, impersonation words.</p></div></div>
+<div class="grid-scan">
+  <div class="card scan-form">
+    <form method="post"><label class="l" for="url">Link to check</label>
+      <div class="url-in"><span>URL</span><input id="url" name="url" value="{{ url }}" placeholder="https://secure-login-update.example.top/verify" required></div>
+      <p class="note">The URL is only analysed as text: no request is sent to it.</p>
+      <button class="btn primary" type="submit">Analyse the link</button></form>
+  </div>
+  <div class="card b">
+  {% if result %}
+    {% set cls = 'high' if result.score >= 60 else 'mid' if result.score >= 30 else 'low' %}
+    <div class="verdict {{ cls }}"><div class="s">{{ result.score }}</div><div><b>{{ result.label }}</b><div class="note">risk score out of 100</div></div></div>
+    {% if result.reasons %}<h3 style="margin:16px 0 6px">Why</h3><ul class="reasons">{% for r in result.reasons %}<li>{{ r }}</li>{% endfor %}</ul>
+    {% else %}<p class="note" style="margin-top:14px">No suspicious pattern found. This is not a proof that the site is legitimate.</p>{% endif %}
+  {% else %}<p class="note">The result appears here. Thresholds: 0–29 low risk, 30–59 suspicious, 60–100 high risk.</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

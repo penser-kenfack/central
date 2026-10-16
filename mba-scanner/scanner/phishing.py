@@ -19,7 +19,7 @@ def analyze_url(target):
     score=min(100,score)
     if score>=60: label='HIGH RISK — LIKELY FAKE'; severity='High'
     elif score>=30: label='SUSPICIOUS / UNVERIFIED'; severity='Medium'
-    else: label='REAL WEBSITE (HEURISTIC CHECK)'; severity='Informational'
+    else: label='LOW RISK (HEURISTIC CHECK)'; severity='Informational'
     return {'label':label,'score':score,'reasons':reasons,'severity':severity}
 
 def scan_phishing(target):

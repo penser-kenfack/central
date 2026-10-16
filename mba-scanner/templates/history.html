@@ -1,1 +1,11 @@
-{% extends "base.html" %}{% block content %}<h1>Scan History</h1><table><tr><th>ID</th><th>Target</th><th>Date</th><th>Open</th></tr>{% for s in scans %}<tr><td>{{s.id}}</td><td>{{s.target}}</td><td>{{s.created_at}}</td><td><a href="{{url_for('scan',scan_id=s.id)}}">Open</a></td></tr>{% endfor %}</table>{% endblock %}
+{% extends "base.html" %}{% block content %}
+<div class="head"><div><h1>Scan history</h1><p>Every scan is stored with its findings; reports can be generated again at any time.</p></div></div>
+<div class="card"><table>
+  <tr><th style="width:70px">Grade</th><th>Target</th><th>Started</th><th>Pages</th><th>Forms</th><th>Status</th><th></th></tr>
+  {% for s in scans %}<tr class="row"><td><span class="grade {{ s.grade or 'none' }}">{{ s.grade or '–' }}</span></td>
+    <td class="mono">{{ s.target }}</td><td>{{ s.created_at }}</td><td>{{ s.pages or 0 }}</td><td>{{ s.forms or 0 }}</td>
+    <td>{% if s.status == 'complete' %}<span class="tag pass">complete · {{ s.score }}/100</span>{% elif s.status == 'error' %}<span class="tag off">error</span>{% else %}<span class="tag off">{{ s.status }}</span>{% endif %}</td>
+    <td style="text-align:right"><a href="{{ url_for('scan_progress', scan_id=s.id) }}">Open</a></td></tr>
+  {% else %}<tr><td colspan="7">No scan yet.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}
