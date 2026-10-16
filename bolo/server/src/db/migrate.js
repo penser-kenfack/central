@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import { pool } from './index.js';
 
 export async function migrate() {
@@ -6,7 +7,7 @@ export async function migrate() {
   await pool.query(sql);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   migrate().then(() => { console.log('Schema up to date'); return pool.end(); })
     .catch((err) => { console.error(err); process.exit(1); });
 }

@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 
 const env = process.env;
 const isTest = env.NODE_ENV === 'test';
@@ -20,7 +21,7 @@ export const config = {
   cvKey: env.CV_ENCRYPTION_KEY
     ? Buffer.from(env.CV_ENCRYPTION_KEY, 'base64')
     : crypto.createHash('sha256').update('cv:' + (env.JWT_SECRET || 'dev-only-secret-change-me')).digest(),
-  storageDir: env.STORAGE_DIR || new URL('../storage/', import.meta.url).pathname,
+  storageDir: env.STORAGE_DIR || fileURLToPath(new URL('../storage/', import.meta.url)),
   cvMaxBytes: Number(env.CV_MAX_BYTES || 5 * 1024 * 1024),
   cvLinkTtlSeconds: Number(env.CV_LINK_TTL_SECONDS || 300),
   rejectionDelayHours: Number(env.REJECTION_DELAY_HOURS || 48),
