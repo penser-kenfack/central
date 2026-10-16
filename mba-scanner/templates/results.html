@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}<h1>Deep Scan Results</h1><p><b>Target:</b> {{scan.target}}</p>
+<div class="cards">{% for k in ["Critical","High","Medium","Low","Informational"] %}<div class="card">{{k}}<strong>{{summary[k]}}</strong></div>{% endfor %}</div>
+<div class="scan-meta"><b>Pages crawled:</b> {{stats.get('pages',0)}} &nbsp; <b>URLs discovered:</b> {{stats.get('urls',0)}} &nbsp; <b>Forms:</b> {{stats.get('forms',0)}} &nbsp; <b>Total findings:</b> {{stats.get('findings',findings|length)}}</div>
+<a class="button" href="{{url_for('report',scan_id=scan.id)}}">Generate PDF Report</a>
+<table><tr><th>Severity</th><th>Source</th><th>Finding</th><th>URL</th><th>Evidence / Recommendation</th></tr>{% for f in findings %}<tr><td>{{f.severity}}</td><td>{{f.source}}</td><td><b>{{f.title}}</b><br><small>{{f.description}}</small></td><td>{{f.url}}</td><td><small><b>Evidence:</b> {{f.evidence}}<br><b>Recommendation:</b> {{f.recommendation}}</small></td></tr>{% endfor %}</table>{% endblock %}

@@ -1,0 +1,126 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+nav {
+    background: #111827;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    gap: 25px;
+}
+
+nav b {
+    margin-right: auto;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    width: 86%;
+    max-width: 1200px;
+    margin: 35px auto;
+}
+
+.hero {
+    background: white;
+    padding: 45px;
+    text-align: center;
+    border-radius: 14px;
+}
+
+/* Target URL input only */
+input[name="target"] {
+    width: 65%;
+    padding: 14px;
+    box-sizing: border-box;
+}
+
+/* Authorization checkbox */
+.authorization {
+    margin: 20px auto;
+    text-align: left;
+    max-width: 600px;
+}
+
+.authorization label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.authorization input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    padding: 0 !important;
+    margin: 0;
+    appearance: auto;
+    cursor: pointer;
+}
+
+button,
+.button {
+    background: #111827;
+    color: white;
+    padding: 13px 20px;
+    border: 0;
+    border-radius: 7px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.note {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.card strong {
+    display: block;
+    font-size: 28px;
+    margin-top: 8px;
+}
+
+table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+    margin-top: 25px;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: #111827;
+    color: white;
+}
+
+small {
+    color: #6b7280;
+}.flash{padding:12px;margin-bottom:15px;border-radius:8px;background:#fee2e2;color:#991b1b}.scan-progress{background:white;padding:40px;border-radius:14px}.progress-track{height:22px;background:#e5e7eb;border-radius:20px;overflow:hidden}.progress-bar{height:100%;background:#111827;transition:width .4s ease}.progress-number{text-align:center;font-size:28px;font-weight:bold;margin:12px}.live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:25px 0}.live-card{background:#f3f4f6;padding:18px;border-radius:10px;text-align:center}.live-card span{display:block;color:#6b7280}.live-card strong{display:block;font-size:26px;margin-top:8px}.stage-list{line-height:2;color:#374151}.scan-meta,.scan-scope{background:#f3f4f6;padding:15px;border-radius:8px;margin:18px 0}@media(max-width:800px){.cards,.live-grid{grid-template-columns:1fr 1fr}}

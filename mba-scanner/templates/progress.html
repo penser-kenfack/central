@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block content %}
+<section class="scan-progress">
+<h1>Deep Security Scan in Progress</h1><p><b>Target:</b> {{scan.target}}</p>
+<div class="progress-track"><div id="bar" class="progress-bar" style="width: {{job.progress}}%"></div></div>
+<div class="progress-number" id="percent">{{job.progress}}%</div>
+<h2 id="stage">{{job.message}}</h2><p class="note">The scanner is performing real analysis. Do not close this page.</p>
+<div class="live-grid"><div class="live-card"><span>Pages crawled</span><strong id="pages">0</strong></div><div class="live-card"><span>URLs discovered</span><strong id="urls">0</strong></div><div class="live-card"><span>Forms found</span><strong id="forms">0</strong></div><div class="live-card"><span>Findings</span><strong id="findings">0</strong></div></div>
+<div class="stage-list"><div>✓ Target validation</div><div>✓ Website crawling & discovery</div><div>✓ Browser security & cookies</div><div>✓ TLS & redirects</div><div>✓ OWASP ZAP deep scan</div><div>✓ Nikto & Nmap</div><div>✓ Risk correlation & report</div></div>
+</section>
+<script>
+const id={{scan.id}};
+async function poll(){
+ try{const r=await fetch(`/scan/${id}/status`);const j=await r.json();
+ document.getElementById('bar').style.width=(j.progress||0)+'%';document.getElementById('percent').textContent=(j.progress||0)+'%';
+ document.getElementById('stage').textContent=j.message||'Working...';
+ ['pages','urls','forms','findings'].forEach(k=>{if(j[k]!==undefined)document.getElementById(k).textContent=j[k]});
+ if(j.stage==='complete'){window.location.href=`/scan/${id}`;return}
+ if(j.stage==='error'){document.getElementById('stage').textContent='Scan error: '+j.error;return}
+ }catch(e){document.getElementById('stage').textContent='Waiting for scanner status...'}
+ setTimeout(poll,1000);
+} poll();
+</script>{% endblock %}

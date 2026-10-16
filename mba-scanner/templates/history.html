@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<h1>Scan History</h1><table><tr><th>ID</th><th>Target</th><th>Date</th><th>Open</th></tr>{% for s in scans %}<tr><td>{{s.id}}</td><td>{{s.target}}</td><td>{{s.created_at}}</td><td><a href="{{url_for('scan',scan_id=s.id)}}">Open</a></td></tr>{% endfor %}</table>{% endblock %}
