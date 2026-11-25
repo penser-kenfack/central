@@ -1,8 +1,8 @@
 package com.university.equipment.model;
 
 /**
- * Concrete equipment for categories that have no dedicated subclass
- * (PRINTER, NETWORK_DEVICE, OTHER).
+ * Concrete equipment without specialised properties (no RAM, no lumens).
+ * Used by the console for PRINTER / NETWORK_DEVICE / OTHER and by both GUIs for any category.
  */
 public class GenericEquipment extends Equipment {
 
@@ -12,12 +12,10 @@ public class GenericEquipment extends Equipment {
 
     @Override
     public String getDescription() {
-        return switch (getCategory()) {
-            case PRINTER -> "Printer";
-            case NETWORK_DEVICE -> "Network device";
-            case COMPUTER -> "Computer";
-            case PROJECTOR -> "Projector";
-            case OTHER -> "Other equipment";
-        };
+        return categoryDescription();
+    }
+
+    private String categoryDescription() {
+        return "General equipment: " + getCategory();
     }
 }
