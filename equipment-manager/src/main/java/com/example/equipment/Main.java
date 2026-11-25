@@ -9,15 +9,16 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Equipment> equipmentList = new ArrayList<>();
 
-        int choice;
         int nextId = 1;
+        int choice;
 
         do {
             System.out.println();
             System.out.println("=== EQUIPMENT MANAGER ===");
             System.out.println("1. List equipment");
             System.out.println("2. Add equipment");
-            System.out.println("3. Quit");
+            System.out.println("3. Search equipment by name");
+            System.out.println("4. Quit");
             System.out.print("Choose an option: ");
 
             choice = Integer.parseInt(scanner.nextLine());
@@ -28,14 +29,7 @@ public class Main {
                         System.out.println("No equipment recorded.");
                     } else {
                         for (Equipment equipment : equipmentList) {
-                            System.out.println(
-                                equipment.id + " | "
-                                + equipment.name + " | "
-                                + equipment.category + " | "
-                                + (equipment.available
-                                    ? "Available"
-                                    : "Unavailable")
-                            );
+                            displayEquipment(equipment);
                         }
                     }
                     break;
@@ -61,6 +55,23 @@ public class Main {
                     break;
 
                 case 3:
+                    System.out.print("Enter equipment name to search: ");
+                    String searchName = scanner.nextLine();
+
+                    Equipment found =
+                        findEquipmentByName(equipmentList, searchName);
+
+                    if (found != null) {
+                        System.out.println("Equipment found:");
+                        displayEquipment(found);
+                    } else {
+                        System.out.println(
+                            "No equipment found with that name."
+                        );
+                    }
+                    break;
+
+                case 4:
                     System.out.println("Goodbye!");
                     break;
 
@@ -68,8 +79,31 @@ public class Main {
                     System.out.println("Invalid choice.");
             }
 
-        } while (choice != 3);
+        } while (choice != 4);
 
         scanner.close();
+    }
+
+    public static Equipment findEquipmentByName(
+            ArrayList<Equipment> equipmentList,
+            String searchName) {
+
+        for (Equipment equipment : equipmentList) {
+            if (equipment.name != null
+                    && equipment.name.equalsIgnoreCase(searchName)) {
+                return equipment;
+            }
+        }
+
+        return null;
+    }
+
+    public static void displayEquipment(Equipment equipment) {
+        System.out.println(
+            equipment.id + " | "
+            + equipment.name + " | "
+            + equipment.category + " | "
+            + (equipment.available ? "Available" : "Unavailable")
+        );
     }
 }
