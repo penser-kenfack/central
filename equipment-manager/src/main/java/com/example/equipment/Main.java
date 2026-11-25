@@ -40,7 +40,15 @@ public class Main {
                     equipment.id = nextId++;
 
                     System.out.print("Enter equipment name: ");
-                    equipment.name = scanner.nextLine();
+                    String name = scanner.nextLine().trim();
+
+                    // Exercise 6: an empty name is not accepted.
+                    while (name.isEmpty()) {
+                        System.out.println("Equipment name cannot be empty.");
+                        System.out.print("Enter equipment name: ");
+                        name = scanner.nextLine().trim();
+                    }
+                    equipment.name = name;
 
                     System.out.print("Enter category: ");
                     equipment.category = scanner.nextLine();
